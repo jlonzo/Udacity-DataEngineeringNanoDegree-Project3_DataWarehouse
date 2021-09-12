@@ -57,58 +57,60 @@ staging_songs_table_create = ("""
 
 songplay_table_create = ("""
     CREATE TABLE IF NOT EXISTS songplays (
-        songplay_id INT IDENTITY(0,1)
-        ,start_time TIMESTAMP sortkey
-        ,user_id    VARCHAR
+        songplay_id INT IDENTITY(0,1) [PRIMARY KEY]
+        ,start_time TIMESTAMP NOT NULL
+        ,user_id    VARCHAR NOT NULL
         ,level      VARCHAR
-        ,song_id    VARCHAR
-        ,artist_id  VARCHAR
+        ,song_id    VARCHAR NOT NULL
+        ,artist_id  VARCHAR NOT NULL
         ,session_id INT
         ,location   VARCHAR
         ,user_agent VARCHAR
-    );
+    ) sortkey (start_time);
 """)
 
 user_table_create = ("""
     CREATE TABLE IF NOT EXISTS users (
-        user_id     VARCHAR distkey
-        ,first_name VARCHAR
-        ,last_name  VARCHAR sortkey
+        user_id     VARCHAR NOT NULL [PRIMARY KEY]
+        ,first_name VARCHAR 
+        ,last_name  VARCHAR
         ,gender     CHAR(1)
         ,level      VARCHAR
-    );
+    ) compound sortkey(first_name, last_name);
 """)
 
 song_table_create = ("""
     CREATE TABLE IF NOT EXISTS songs (
-        song_id     VARCHAR distkey
-        ,title      VARCHAR sortkey
-        ,artist_id  VARCHAR
+        song_id     VARCHAR NOT NULL [PRIMARY KEY]
+        ,title      VARCHAR NOT NULL
+        ,artist_id  VARCHAR NOT NULL
         ,year       SMALLINT
         ,duration   NUMERIC(10,6)
-    );
+    ) distkey(artist_id)
+    sortkey(title);
 """)
 
 artist_table_create = ("""
     CREATE TABLE IF NOT EXISTS artists (
-        artist_id  VARCHAR distkey
-        ,name      VARCHAR sortkey
+        artist_id  VARCHAR NOT NULL [PRIMARY KEY]
+        ,name      VARCHAR NOT NULL
         ,location  VARCHAR
         ,latitude  NUMERIC
         ,longitude NUMERIC
-    );
+    ) sortkey(name);
 """)
 
 time_table_create = ("""
     CREATE TABLE IF NOT EXISTS time (
-        start_time TIMESTAMP sortkey distkey
+        start_time TIMESTAMP NOT NULL [PRIMARY KEY]
         ,hour    SMALLINT
         ,day     SMALLINT
         ,week    SMALLINT
         ,month   SMALLINT
         ,year    SMALLINT
         ,weekday SMALLINT
-    );
+    ) distkey(year)
+    sortkey(start_time);
 """)
 
 
